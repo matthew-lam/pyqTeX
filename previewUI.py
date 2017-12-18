@@ -28,7 +28,7 @@ class preview_thread(QThread):
         thread_message.emit(message)
 
     def run(self):
-        #Statements to be processed in thread placed in this method. Again, use .start() to run thread.         
+        #Statements to be processed in thread placed in this method. Use .start() to run thread.         
         #Creates a new subprocess to compile current document
         proc = subprocess.Popen(['pdflatex', '%s' % self.copiedFile_name],
         stdin = subprocess.PIPE,
@@ -41,14 +41,10 @@ class preview_thread(QThread):
                 self.thread_message.emit("An error has occured --- error message from log file: \n\n" + stdoutdata.decode('ascii'))
             elif proc.returncode == 0:
                 self.thread_message.emit("File successfully compiled into .tex format and converted to PDF for viewing.")
-            #print("\n\nNo errors occured during compilation.")
-            #print("NO ERROR PRODUCED -- stdoutdata: \n\n" + stdoutdata.decode('ascii'))
-            #print("\ERROR PRODUCED -- stderrdata: \n\n" + stderrdata.decode('ascii'))
-            
         except subprocess.TimeoutExpired:
             proc.kill()
             stdoutdata, stderrdata = proc.communicate()
-            print("\n\nErrors HAVE occured during compilation.")
+            print("\n\nErrors have occured during compilation.")
             self.thread_message.emit(stdoutdata.decode('ascii'))
 
 
