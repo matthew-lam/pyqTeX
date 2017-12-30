@@ -14,6 +14,7 @@ class PreviewWindow(QScrollArea, QWidget):
         self.setWidget(windowWidget)
         self.setWidgetResizable(True)
         self.setWindowTitle("LaTeX editor - Document viewer")
+        vlayout.setAlignment(Qt.AlignCenter)
         WindowUtilityFunctions.setTopRight(self)
         self.resize(screenDimX, screenDimY)
         self.setBackgroundRole(QPalette.Dark)
@@ -31,14 +32,6 @@ class PreviewWindow(QScrollArea, QWidget):
         self.baseFolder = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '-pdf') 
         self.folderDir = self.baseFolder + '-compiled'
 
-        # vBox = QVBoxLayout(self)
-        # self.setLayout(vBox)
-        # self.setWindowTitle("LaTeX editor -- PDF Preview")
-        # 
-        # vBox.addWidget(scrollArea)
-        # self.show()
-
-#Insert worker thread class into another module to maintain readability of code, perhaps previewUI.py?
 class preview_thread(QThread):
 
     thread_message = pyqtSignal(str)
@@ -75,7 +68,9 @@ class preview_thread(QThread):
             #Folder already exists
             pass
         for pageCount in range(0, len(doc)):
-            px = doc.getPagePixmap(pageCount)
+            zoom = 225.0 / 75.0
+            matr = fitz.Matrix(zoom, zoom)
+            px = doc.getPagePixmap(pageCount, matrix = matr, clip = None, alpha = False)
             px_name = "%s-%s.png" % (os.path.basename(os.path.normpath(self.p)), str(pageCount))
             fileDir = str(self.p.parent.parent) + '/' + px_name
             if os.path.isfile(os.path.join(self.baseFolder + '-compiled/' + px_name)):
