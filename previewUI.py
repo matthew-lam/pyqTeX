@@ -3,26 +3,70 @@ from pathlib import Path
 
 #previewWindow class contains code associated with previewTex (txt -> LaTeX) button
 #To create PDFs we can simply call from Python commands to TeX compiler that must have been installed by user.
-class PreviewWindow(QWidget):
+class PreviewWindow(QScrollArea, QWidget):
 
     def __init__(self, EditorWindow_class):
-        super().__init__()
+        self.init_pathVariables(EditorWindow_class)
+        super(PreviewWindow, self).__init__()
+        
+        windowWidget = QWidget()
+        vlayout = QVBoxLayout(windowWidget)
+        self.setWidget(windowWidget)
+        self.setWidgetResizable(True)
+        self.setWindowTitle("LaTeX editor - Document viewer")
+        for file in (sorted(os.listdir(self.folderDir))):
+            print(str(file))
+            label = QLabel(self)
+            pixmap = QPixmap(os.path.join(self.folderDir, file))
+            label.setPixmap(pixmap)
+            vlayout.addWidget(label)
+        self.show()
+
+    def init_pathVariables(self, EditorWindow_class):
         self.file = EditorWindow_class.currentFile
         filePath = os.path.splitext(self.file)
         self.p = Path(filePath[0])
         self.baseFolder = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '-pdf') 
         self.folderDir = self.baseFolder + '-compiled'
-        print("basefolder : " + self.baseFolder)
-        print("folderDir : " + self.folderDir)
-        self.init_PreviewWindow()
 
-    def init_PreviewWindow(self):
-        self.PDFtoPNG()
-        self.displayAllPNG()
+        # vBox = QVBoxLayout(self)
+        # self.setLayout(vBox)
+        # self.setWindowTitle("LaTeX editor -- PDF Preview")
+        # 
+        # vBox.addWidget(scrollArea)
+        # self.show()
+
+#Insert worker thread class into another module to maintain readability of code, perhaps previewUI.py?
+class preview_thread(QThread):
+
+    thread_message = pyqtSignal(str)
+    returnCode = pyqtSignal(int)
+
+    #Instantiate a thread object and then run thread by using .start() method instead of .run()
+    def __init__(self, EditorWindow_class):
+        QThread.__init__(self)
+        self.exiting = False
+        self.copiedFile_name = EditorWindow_class.currentFile
+        filePath = os.path.splitext(self.copiedFile_name)
+        self.p = Path(filePath[0])
+        self.baseFolder = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '-pdf') 
+        self.folderDir = self.baseFolder + '-compiled'
+
+    def __del__(self):
+        #Ensures that processing of thread is finished before thread object is destroyed.
+        self.exiting = True
+        self.wait()
+
+    def write(self, message):
+        thread_message.emit(message)
+
+    def send_ReturnCode(self, intCode):
+        returnCode.emit(intCode)
 
     def PDFtoPNG(self):
         #Converts each page in a PDF file into a PNG file and move to another folder so that they can be viewed in a qt image viewer.
         self.pdfPath = self.baseFolder + '/' + os.path.basename(os.path.normpath(self.p)) + '.pdf' #need to add filename.pdf at the end to get document
+        print(self.pdfPath)
         doc = fitz.open(self.pdfPath)
         try:
             os.makedirs(self.folderDir)
@@ -45,49 +89,7 @@ class PreviewWindow(QWidget):
                     pass
             px = None
         doc.close()
-        return
-
-    def displayAllPNG(self):
-        #This method cycles through all images in a folder and then displays them in a window.
-        #Each image is loaded as a QPixmap loaded on to a QVBox and loaded onto a QWidget window.
-        vBox = QVBoxLayout(self)
-        self.setLayout(vBox)
-        self.setWindowTitle("LaTeX editor -- PDF Preview")
-        scrollArea = QScrollArea(self)
-        for file in os.listdir(self.folderDir):
-            label = QLabel(self)
-            pixmap = QPixmap(os.path.join(self.folderDir, file))
-            label.setPixmap(pixmap)
-            vBox.addWidget(label)
-        vBox.addWidget(scrollArea)
-        #scrollArea.setWidget(self)
-        self.show()
-
-#Insert worker thread class into another module to maintain readability of code, perhaps previewUI.py?
-class preview_thread(QThread):
-
-    thread_message = pyqtSignal(str)
-    returnCode = pyqtSignal(int)
-
-    #Instantiate a thread object and then run thread by using .start() method instead of .run()
-    def __init__(self, EditorWindow_class):
-        QThread.__init__(self)
-        self.exiting = False
-        self.copiedFile_name = EditorWindow_class.currentFile
-        filePath = os.path.splitext(self.copiedFile_name)
-        self.p = Path(filePath[0])
-        self.baseFolder = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p)) 
-
-    def __del__(self):
-        #Ensures that processing of thread is finished before thread object is destroyed.
-        self.exiting = True
-        self.wait()
-
-    def write(self, message):
-        thread_message.emit(message)
-
-    def send_ReturnCode(self, intCode):
-        returnCode.emit(intCode)
+        return        
 
     def run(self):
         #Statements to be processed in thread placed in this method. Use .start() to run thread.         
@@ -108,7 +110,7 @@ class preview_thread(QThread):
                 self.returnCode.emit(1)
             elif proc.returncode == 0: 
             #Subprocess successfully completes as expected.
-                self.thread_message.emit("File successfully compiled into .tex format and converted to PDF for viewing.")
+                self.thread_message.emit("File successfully compiled into .tex format and converted to PDF for viewing out of LaTeX editor and .png format for viewing in LaTeX editor.")
                 self.returnCode.emit(0)
         except subprocess.TimeoutExpired:
             proc.kill()
@@ -120,20 +122,23 @@ class preview_thread(QThread):
         auxFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.aux')
         logFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.log')
         try:
-            if os.path.exists(os.path.join(self.baseFolder + '-pdf')) == False:
-                os.makedirs((os.path.join(self.baseFolder + '-pdf')))
-                shutil.move(pdfFile, (os.path.join(self.baseFolder + '-pdf')))
-                shutil.move(auxFile, (os.path.join(self.baseFolder + '-pdf')))
-                shutil.move(logFile, (os.path.join(self.baseFolder + '-pdf')))
+            if os.path.exists(os.path.join(self.baseFolder)) == False:
+                os.makedirs((os.path.join(self.baseFolder)))
+                shutil.move(pdfFile, (os.path.join(self.baseFolder)))
+                shutil.move(auxFile, (os.path.join(self.baseFolder)))
+                shutil.move(logFile, (os.path.join(self.baseFolder)))
             else:
-                shutil.copy2(pdfFile, (os.path.join(self.baseFolder + '-pdf')))
-                shutil.copy2(auxFile, (os.path.join(self.baseFolder + '-pdf')))
-                shutil.copy2(logFile, (os.path.join(self.baseFolder + '-pdf')))
+                shutil.copy2(pdfFile, (os.path.join(self.baseFolder)))
+                shutil.copy2(auxFile, (os.path.join(self.baseFolder)))
+                shutil.copy2(logFile, (os.path.join(self.baseFolder)))
                 os.remove(pdfFile)
                 os.remove(auxFile)
                 os.remove(logFile)
         except:
             pass
+
+        self.PDFtoPNG()
+
         #When the thread has finished running, a signal is sent to notify the main appwindow to raise a message box
         #to notify the user that the file has successfully been compiled and is ready to view...to
 
