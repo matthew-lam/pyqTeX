@@ -5,7 +5,7 @@ from pathlib import Path
 #To create PDFs we can simply call from Python commands to TeX compiler that must have been installed by user.
 class PreviewWindow(QScrollArea, QWidget):
 
-    def __init__(self, EditorWindow_class):
+    def __init__(self, EditorWindow_class, screenDimX, screenDimY):
         self.init_pathVariables(EditorWindow_class)
         super(PreviewWindow, self).__init__()
         
@@ -14,8 +14,10 @@ class PreviewWindow(QScrollArea, QWidget):
         self.setWidget(windowWidget)
         self.setWidgetResizable(True)
         self.setWindowTitle("LaTeX editor - Document viewer")
+        WindowUtilityFunctions.setTopRight(self)
+        self.resize(screenDimX, screenDimY)
+        self.setBackgroundRole(QPalette.Dark)
         for file in (sorted(os.listdir(self.folderDir))):
-            print(str(file))
             label = QLabel(self)
             pixmap = QPixmap(os.path.join(self.folderDir, file))
             label.setPixmap(pixmap)
@@ -66,7 +68,6 @@ class preview_thread(QThread):
     def PDFtoPNG(self):
         #Converts each page in a PDF file into a PNG file and move to another folder so that they can be viewed in a qt image viewer.
         self.pdfPath = self.baseFolder + '/' + os.path.basename(os.path.normpath(self.p)) + '.pdf' #need to add filename.pdf at the end to get document
-        print(self.pdfPath)
         doc = fitz.open(self.pdfPath)
         try:
             os.makedirs(self.folderDir)
@@ -115,7 +116,6 @@ class preview_thread(QThread):
         except subprocess.TimeoutExpired:
             proc.kill()
             stdoutdata, stderrdata = proc.communicate()
-            print("\n\nErrors have occured during compilation.")
             self.thread_message.emit(stdoutdata.decode('ascii'))
 
         pdfFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.pdf')
