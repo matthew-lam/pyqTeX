@@ -1,51 +1,51 @@
-% A complete graph
-% Author: Quintin Jean-NoÃ«l
-% <http://moais.imag.fr/membres/jean-noel.quintin/>
-\documentclass{article}
-\usepackage{tikz}
-%%%<
-\usepackage{verbatim}
-\usepackage{verbatim}
-\usepackage[active,tightpage]{preview}
-\PreviewEnvironment{tikzpicture}
-\setlength\PreviewBorder{5pt}%
-%%%>
-\begin{comment}
-:Title: A complete graph
-:Tags: Foreach;Graphs;To paths
-:Author: Jean-NoÃ«l Quintin
-:Slug: complete-graph
-\end{comment}
-\usetikzlibrary[topaths]
-% A counter, since TikZ is not clever enough (yet) to handle
-% arbitrary angle systems.
-\newcount\mycount
+
+
+\documentclass[12pt]{article}
+\usepackage{lingmacros}
+\usepackage{tree-dvips}
 \begin{document}
-\begin{tikzpicture}[transform shape]
-  %the multiplication with floats is not possible. Thus I split the loop in two.
-  \foreach \number in {1,...,8}{
-      % Computer angle:
-        \mycount=\number
-        \advance\mycount by -1
-  \multiply\mycount by 45
-        \advance\mycount by 0
-      \node[draw,circle,inner sep=0.25cm] (N-\number) at (\the\mycount:5.4cm) {};
-    }
-  \foreach \number in {9,...,16}{
-      % Computer angle:
-        \mycount=\number
-        \advance\mycount by -1
-  \multiply\mycount by 45
-        \advance\mycount by 22.5
-      \node[draw,circle,inner sep=0.25cm] (N-\number) at (\the\mycount:5.4cm) {};
-    }
-  \foreach \number in {1,...,15}{
-        \mycount=\number
-        \advance\mycount by 1
-  \foreach \numbera in {\the\mycount,...,16}{
-    \path (N-\number) edge[->,bend right=3] (N-\numbera)  edge[<-,bend
-      left=3] (N-\numbera);
-  }
+
+\section*{HELLO WORLD}
+
+Don't forget to include examples of topicalization.
+They look like this:
+
+{\small
+\enumsentence{Topicalization from sentential subject:\\ 
+\shortex{7}{a John$_i$ [a & kltukl & [el & 
+  {\bf l-}oltoir & er & ngii$_i$ & a Mary]]}
+{ & {\bf R-}clear & {\sc comp} & 
+  {\bf IR}.{\sc 3s}-love   & P & him & }
+{John, (it's) clear that Mary loves (him).}}
 }
-\end{tikzpicture}
+
+\subsection*{How to handle topicalization}
+
+I'll just assume a tree structure like (\ex{1}).
+
+{\small
+\enumsentence{Structure of A$'$ Projections:\\ [2ex]
+\begin{tabular}[t]{cccc}
+    & \node{i}{CP}\\ [2ex]
+    \node{ii}{Spec} &   &\node{iii}{C$'$}\\ [2ex]
+        &\node{iv}{C} & & \node{v}{SAgrP}
+\end{tabular}
+\nodeconnect{i}{ii}
+\nodeconnect{i}{iii}
+\nodeconnect{iii}{iv}
+\nodeconnect{iii}{v}
+}
+}
+
+\subsection*{Mood}
+
+Mood changes when there is a topic, as well as when
+there is WH-movement.  \emph{Irrealis} is the mood when
+there is a non-subject topic or WH-phrase in Comp.
+\emph{Realis} is the mood when there is a subject topic
+or WH-phrase.
+
+Sourced from: http://mally.stanford.edu/~sr/computing/latex-example.html
+Temporary file to check whether TeX functionality works in my LaTeX editor. Nothing to see here.
+
 \end{document}

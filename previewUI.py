@@ -9,21 +9,24 @@ class PreviewWindow(QScrollArea, QWidget):
         self.init_pathVariables(EditorWindow_class)
         super(PreviewWindow, self).__init__()
         
-        windowWidget = QWidget()
-        vlayout = QVBoxLayout(windowWidget)
-        self.setWidget(windowWidget)
-        self.setWidgetResizable(True)
-        self.setWindowTitle("LaTeX editor - Document viewer")
-        vlayout.setAlignment(Qt.AlignCenter)
-        WindowUtilityFunctions.setTopRight(self)
-        self.resize(screenDimX, screenDimY)
-        self.setBackgroundRole(QPalette.Dark)
+        self.scene = QGraphicsScene()
+        self.view = View(self.scene)
+        self.scene.setBackgroundBrush(QColor('darkGray'))
+        self.imagePos = 0
+        pageBreakValue = 25
+        
         for file in (sorted(os.listdir(self.folderDir))):
-            label = QLabel(self)
             pixmap = QPixmap(os.path.join(self.folderDir, file))
-            label.setPixmap(pixmap)
-            vlayout.addWidget(label)
-        self.show()
+            imageObj = self.scene.addPixmap(pixmap)
+            imageObj.setOffset(0, self.imagePos)
+            self.imagePos = self.imagePos + pixmap.height() + pageBreakValue
+
+        self.view.fitInView(0, 0, screenDimY, screenDimX, Qt.KeepAspectRatio)
+        self.view.setAlignment(Qt.AlignCenter)
+        self.view.resize(screenDimX, screenDimY)
+        WindowUtilityFunctions.setTopRight(self.view)
+        self.view.setWindowTitle('LaTeX editor -- Preview Window')
+        self.view.show()
 
     def init_pathVariables(self, EditorWindow_class):
         self.file = EditorWindow_class.currentFile
@@ -31,6 +34,18 @@ class PreviewWindow(QScrollArea, QWidget):
         self.p = Path(filePath[0])
         self.baseFolder = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '-pdf') 
         self.folderDir = self.baseFolder + '-compiled'
+
+
+class View(QGraphicsView):
+
+    def __init__(self, parent = None):
+        QGraphicsView.__init__(self, parent)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Equal:
+            self.scale(1.1, 1.1)
+        elif event.key() == Qt.Key_Minus:
+            self.scale(0.9, 0.9) 
 
 class preview_thread(QThread):
 
@@ -68,7 +83,7 @@ class preview_thread(QThread):
             #Folder already exists
             pass
         for pageCount in range(0, len(doc)):
-            zoom = 225.0 / 75.0
+            zoom = 300.0 / 72.0
             matr = fitz.Matrix(zoom, zoom)
             px = doc.getPagePixmap(pageCount, matrix = matr, clip = None, alpha = False)
             px_name = "%s-%s.png" % (os.path.basename(os.path.normpath(self.p)), str(pageCount))
@@ -95,7 +110,7 @@ class preview_thread(QThread):
         stdout = subprocess.PIPE,
         stderr = subprocess.PIPE)
         try:
-            stdoutdata, stderrdata = proc.communicate(timeout=5)
+            stdoutdata, stderrdata = proc.communicate(timeout=10)
             #try looking at return code.
             if proc.returncode == 1: 
             #Subprocess (pdflatex) error -- pdflatex crashes (fatal error) and notifies user of error.
@@ -133,8 +148,3 @@ class preview_thread(QThread):
             pass
 
         self.PDFtoPNG()
-
-        #When the thread has finished running, a signal is sent to notify the main appwindow to raise a message box
-        #to notify the user that the file has successfully been compiled and is ready to view...to
-
-        #After the notification, an instance of PreviewWindow is created to render and view the PDF file.
