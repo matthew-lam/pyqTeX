@@ -1,9 +1,7 @@
 from editorUI import *
 from pathlib import Path
 
-#previewWindow class contains code associated with previewTex (txt -> LaTeX) button
-#To create PDFs we can simply call from Python commands to TeX compiler that must have been installed by user.
-class PreviewWindow(QScrollArea, QWidget):
+class PreviewWindow(QWidget):
 
     def __init__(self, EditorWindow_class, screenDimX, screenDimY):
         self.init_pathVariables(EditorWindow_class)
@@ -114,9 +112,9 @@ class preview_thread(QThread):
             #try looking at return code.
             if proc.returncode == 1: 
             #Subprocess (pdflatex) error -- pdflatex crashes (fatal error) and notifies user of error.
-                self.thread_message.emit("An error has occured --- error message from log file:\
+                self.thread_message.emit("An error has occured --- error message from log file:\n------\
                     \n\n" + stdoutdata.decode('ascii') + 
-                    "\n\nPlease ignore console debugging options.")
+                    "\n------\nPlease ignore console debugging options.")
                 print(stdoutdata.decode('ascii'))
                 self.returnCode.emit(1)
             elif proc.returncode == 0: 
@@ -147,4 +145,7 @@ class preview_thread(QThread):
         except:
             pass
 
-        self.PDFtoPNG()
+        try:
+            self.PDFtoPNG()
+        except:
+            pass
