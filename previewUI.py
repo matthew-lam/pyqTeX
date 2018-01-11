@@ -1,5 +1,6 @@
 from editorUI import *
 from pathlib import Path
+import glob
 
 class PreviewWindow(QWidget):
 
@@ -136,6 +137,11 @@ class preview_thread(QThread):
                 shutil.move(auxFile, (os.path.join(self.baseFolder)))
                 shutil.move(logFile, (os.path.join(self.baseFolder)))
             else:
+                pngFileFolder = self.baseFolder + '-compiled'
+                os.chdir(pngFileFolder)
+                files2delete = glob.glob('*.png')
+                for pngfiles in files2delete:
+                    os.unlink(pngfiles)
                 shutil.copy2(pdfFile, (os.path.join(self.baseFolder)))
                 shutil.copy2(auxFile, (os.path.join(self.baseFolder)))
                 shutil.copy2(logFile, (os.path.join(self.baseFolder)))

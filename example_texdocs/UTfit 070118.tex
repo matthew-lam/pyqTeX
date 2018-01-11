@@ -1,0 +1,483 @@
+\documentclass[12pt,a4paper]{article}
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{23cm}
+\setlength{\hoffset}{-1.1cm}
+\setlength{\voffset}{-1.1cm}
+\usepackage{cite}
+\usepackage{enumerate}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{verbatim}
+
+\newcommand\ie{{\it{i.e.}}~}
+
+\title{Characterising the Standard Model with Inputs to the UTfit Project, a Global Fit Analysis}
+% this is a comment :)
+\author{Henry Lam}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+ 
+ % We can make the Standard Model a more complete theory with the use of the UTfit project by combining the theoretical calculation and experimental information provided by various high energy experiments. Specifically, with the use of the Cabibbo-Kobayashi-Maskawa (CKM) matrix which is a 3x3 unitary matrix that describes the weak charge-changing couplings of quarks, we input observed values that were recorded from experiments into the matrix to extract fundamental parameters of the Standard Model. The use of the UTfit project in conjunction to this, helps to validate the CKM mechanism as well as consolidate the parameters extracted from the CKM matrix in the Standard Model. An analysis of parameters and predictions of the Standard Model will be performed with the use of a global Bayesian fit (UTfit) in this paper.
+ 
+ The Standard Model is a model that describes and predicts how fundamental particles interact. Although it has been successfully tested at a high degree of accuracy and provides us with the best understanding of particle physics; so far it only describes visible matter and does not account for dark matter.  The Standard Model has a number of parameters that are yet to be determined but a few of these parameters can be extracted from measurements of observables that can be linked to them. An example of this includes the parameters of the CKM matrix. The CKM matrix is a 3 x 3 quark mixing matrix that determines the probabilities in which flavour changing neutral currents occur which was expanded upon the GIM mechanism. As the CKM matrix is unitary, we can exploit this property to form unitary triangles. The angles and lengths of the sides of these triangles are directly related to the experimental observables and with the use of the UTfit collaboration (which performs a global fit using a Bayesian approach), we can check the validity of the CKM mechanism in the Standard Model and determine accurately the parameters of the CKM matrix.
+ 
+\end{abstract}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction}
+\label{sec}
+
+\subsection{Standard Model of Particle Physics}
+\label{Standard Model of Particle Physics}
+
+\subsubsection{Standard Model}
+\par
+The Standard Model is a theory that was discussed since the 1930s but established from 1970s which is a theory of fundamental particles and how they interact with each other. In total there are seventeen fundamental particles which have been discovered so far and they are categorised into two different groups; bosons and fermions. \par
+
+Particles with an integer spin are known as Bosons and so all mesons and mediators are categorised as bosons. Unlike fermions, bosons have integer spin; as a result of this, the Pauli Exclusion principle does not apply to bosons.\par 
+
+Fermions were discovered by Ettore Majorana in 1937 and are essentially the building blocks of matter. Particles with half-integer spin are known as fermions and are also characterised by Fermi-Dirac statistics. Fermions can be further categorised into two groups which are dependent on whether they interact with the strong force or not- those that do are called quarks and those that do not are called leptons. In total, there are three generations of quark pairs and lepton pairs. There are six flavours of quarks which are categorised into three generations which are detailed in table 1 and six flavours of leptons which are detailed in table 2, the generations are distinguished by the different masses.
+
+\par
+ \begin{table}[!h]
+  \centering
+  \caption{A table detailing the three generations of quarks} 
+    % masses taken from PDG add reference!
+  \label{table}
+  
+  \begin{tabular}{l|c|c|c|c}
+  \hline
+    Generation & Name & Symbol & Rest Mass & Charge \\
+     &  &  &  [MeV/c$^2$] & [e] \\
+    \hline
+    $1st$ & Up & $u$ & $2.3$ & $2/3$ \\
+    $ $ & Down & $d$ & $4.8$ & $-1/3$   \\
+    \hline
+    $2nd$ & Charm & $c$ & $1.28 \times 10^3$ & $2/3$ \\
+    $ $ & Strange & $s$ & $95$ & $-1/3$ \\
+    \hline
+    $3rd$ & Top & $t$ & $1.73 \times 10^5 $ & $2/3$ \\
+    $ $ & Bottom & $b$ & $4.18\times 10^3 $ & $-1/3$ \\
+
+    \hline
+  \end{tabular}
+\end{table}
+
+\par
+
+\begin{table}[!h]
+  \centering
+  \caption{A table detailing the three generations of leptons} 
+  % masses taken from PDG add reference!
+  \label{table}
+  
+  \begin{tabular}{l|c|c|c|c}
+  \hline
+    Generation & Name & Symbol & Rest Mass & Charge \\
+     &  &  &  [MeV/c$^2$] & [e] \\
+    \hline
+    $1st$ & Electron & $e$ & $0.511$ & $-1$ \\
+    $ $ & Electron Neutrino & $\nu_e$ & $2 \times 10^{-3}$ & $0$   \\
+    \hline
+    $2nd$ & Muon & $\mu$ & $106$ & $-1$ \\
+    $ $ & Muon Neutrino & $\nu_{\mu}$ & $2 \times 10^{-3}$ & $0$ \\
+    \hline
+    $3rd$ & Tau & $\tau$ & $178 $ & $-1$ \\
+    $ $ & Tau Neutrino & $\nu_{\tau}$ & $2 \times 10^{-3} $ & $0$ \\
+
+    \hline
+  \end{tabular}
+\end{table}
+\newpage
+
+Fermions are defined by their half-integer spin and characterised by Fermi-Dirac statistics and a result of this property infers that they obey a statistical rule described by Wolfgang Pauli known as the Pauli Exclusion Rule. Whereby, fermions cannot occupy the same quantum state within a quantum system simultaneously and so only one fermion can occupy a specific quantum state at any given time. Furthermore, during interactions, the baryon and lepton numbers must be conserved during fermion interactions. \par 
+
+\subsubsection{Mesons}
+\par
+Quarks bind together in two different way, either in triplets or in doublets. Mesons are composed of a quark and an anti-quark and exists as a doublet that have an overall spin of either 0 or 1. They participate in both the weak and strong interactions and are highly unstable; in particular $B$ mesons 
+
+\begin{table}[!h]
+  \centering
+  \caption{B Meson}
+  \label{table}
+  \begin{tabular}{l|c|c|c|c|c|c}
+    Particle name & Symbol & Antiparticle & Quark  & Charge & Rest Mass & Lifetime \\
+     &  &  & Composition &  & [MeV/c$^2$] & [s] \\
+    \hline
+    $B$ meson   & $B^+$  & $B^-$  & $u\overline{b}$ & $+1$ & $5279$ & $1.5 \times 10^{-12}$ \\
+    $B$ meson   & $B^0$  & $\overline{B}^0$  & $d\overline{b}$ & $0$ & $5279$ & $1.5 \times 10^{-12}$ \\
+    $ $ Strange B meson  & $B_s^0$ & $B_s^0$ & $d\overline{b}$ & $0$ & $5370$ & $1.5 \times 10^{-12}$ \\
+    $ $ Charmed B meson  & $B_c^+$ & $B_c^-$ & $c\overline{b}$ & $+1$ & $6275$ & $0.5 \times 10^{-12}$ \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsubsection{Meson Mixing and Oscillation}
+
+\subsection{Weak Interaction}
+The weak force 
+
+\subsubsection{W Exchange}
+In the current Standard Model, all flavour changing processes that occur between fermions are mediated by the W boson as these are only observed in the weak interaction. As the mass of the W boson is much more heavier than the mass of the quarks of the hadron that is undergoing a decay; the W exchange occurs at a much smaller distance scale which is a result of the inverse proportional relation, it shares with the energy from this interaction.
+
+\subsubsection{Flavour Changing Neutral-Currents (FCNC)}
+The current Standard Model states that quarks can change flavours through FCNC interactions. For example, in 
+FCCC 
+
+\subsection{Symmetries}
+Symmetries are an important part in the Standard Model and they help in describing the interactions in particle physics. Symmetry is an operation that is performed on a system that leaves it invariant according to Noether's Theorem. 
+There are three important discrete symmetries: Charge conjugation $(C)$, Parity $(P)$ and Time-reversal $(T)$. So far the conservation of $C$, $P$ and their product $CP$ were thought to have been conserved however violations of these symmetries have been observed.   \par
+
+
+\subsubsection{Charge Conjugation ($C$)}
+Charge conjugation represents the transformation of a particle into its antiparticle when the charge conjugation operator is applied to a particle. Charge conjugation is conserved in electromagnetic and strong interactions and in classical electrodynamics it is shown that the change of the sign of all electric charges in these interactions are invariant.
+
+The Charge Conjugation operator ($C$) reverses the electric charge and magnetic moment and so applying $C$ twice restores the initial state of the particle: $C^2 = 1$
+
+\subsubsection{Parity ($P$)}
+Parity is conserved when the signage of the object is invariant given a reflection about an axis.
+
+Parity is an operation that when performed takes a vector and reflects it through the origin; for example: applying the parity for a wavefunction $\psi(r)$ reverses the coordinate $r$ to $-r$; this is equivalent to a reflection in the x-y plane followed by a rotation in the z-axis; assuming that the vector $r$ lies in the first quadrant in a 3-D space.
+
+ \[\hat{P}\psi(x,t) = P\psi(-x,t) \]
+Where $\hat{P}$ is the parity operator, $\psi$ is the wavefunction of an arbitrary particle.
+ 
+ 
+
+\subsection{CP Violation}
+
+Both the electromagnetic and strong interactions are invariant under C and P individually and it is inferred that they are also symmetrical under the product CP. However parity is not conserved under the weak interaction, as discovered by Chien-Shiung Wu who demonstrated a violation of parity conservation in the study of $\beta$ decays of Cobalt-60. The velocity of the electron was observed to have reversed and was emitted in the opposite direction to Cobalt's nuclear spin. Thus the parity was shown to be not invariant during this experiment. 
+%add reference C. S. Wu et al., “Experimental Test of Parity Conservation in Beta Decay,” Phys. Rev. 105, 1413 (1957)
+CP violation was first observed in the study of rare kaon decays by Christenson, Cronin, Fitch and Turlay (1964), particularly when they were studying $K^0_L$ mesons which had a CP eigenvalue of -1 and supposedly was thought to have decayed into three pions with an eigenvalue of -1 as well. 
+%add reference J. H. Christenson et al., “Evidence for the 2π Decay of the K20 Meson,” Phys. Rev. Lett. 13, 138-140 (1964)
+
+According to the Standard Model the only source of flavour-changing interactions only arises from weak interactions; this is because strangeness is not conserved in these interactions
+			
+\subsection{GIM Mechanism}
+
+
+\subsection{Cabibbo Matrix}
+Nicola Cabibbo suggested that to solve the issue in which strange particles ..., the d and s quarks interacted through a mixing angle which is know as the Cabibbo angle. The Cabibbo Angle  This suggested that the quark that couples to the up quark in the weak interaction was no longer considered as purely a down or strange quark but as a linear combination of the two which is given by:
+$d_c = dcos(\theta_c) + ssin(\theta_c)$.
+
+\subsection{Cabibbo-Kobayashi-Maskawa Matrix}
+The CKM matrix is a 3 x 3 unitary matrix which relates the quark mass eigenstates to the flavor eigenstates. In the current Standard Model, the CKM matrix is unitary by construction; the CKM matrix $ V _{CKM} $ is written as : \par
+\[ V_{CKM} =  
+ \left(
+ \begin{array}{ccc}
+  V_{ud} & V_{us} & V_{ub} \\
+  V_{cd} & V_{cs} & V_{cb} \\
+  V_{td} & V_{ts} & V_{tb}
+ \end{array}
+ \right)
+\]
+
+Where the $ V_{ij}$ are the couplings of the quark mixing transition from a left-handed $i$th generation up-type quark to a left-handed $j$th generation down-type quark, via W exchange. For example: $V_{12} = V_{us}$.
+  
+Currently we can extract four independent parameters from the matrix, three of which are real and the remaining one a complex phase. 
+
+The CKM matrix relates the quark mass eigenstates to the flavor eigenstates :
+
+\[
+ \left(
+ \begin{array}{c}
+ flavor \\
+ eigenstate
+ \end{array}
+ \right)
+ =
+  \left(
+ \begin{array}{c}
+  CKM \\
+ matrix
+ \end{array}
+ \right)
+  \left(
+ \begin{array}{c}
+  mass \\
+ eigenstate
+  \end{array}
+ \right)
+\]
+
+Which can be represented as:
+ \[
+ \left(
+ \begin{array}{c}
+ d' \\
+ s' \\
+ b'
+ \end{array}
+ \right)
+ =
+ \left(
+ \begin{array}{ccc}
+  V_{ud} & V_{us} & V_{ub} \\
+  V_{cd} & V_{cs} & V_{cb} \\
+  V_{td} & V_{ts} & V_{tb}
+ \end{array}
+ \right)
+ \left(
+ \begin{array}{c}
+  d \\
+  s \\  b
+ \end{array}
+ \right)
+ =
+ V_{CKM}
+  \left(
+ \begin{array}{c}
+ d \\
+ s \\
+ b
+ \end{array}
+ \right)
+ \]
+ 
+The CKM matrix is much like the GIM mechanism, however the CKM matrix is extended to three generation quarks instead of two as seen from the GIM mechanism. Where in the instance of a $2 \times 2$ matrix, the matrix V is a simple rotation matrix, where $\theta_{Cabibo}$ is the angle of rotation which allows for the mixing between the two generations of quarks established at the time.
+
+An n-dimensional CKM matrix has: $ {n(n-1)}/2 $ real parameters and $ (n-1)(n-2)/2 $ non-trivial phases which induce CP violation. So far we have discovered 3 generations of quarks and so $n=3$; with this information we can predict 3 real parameters and 1 non-trivial phase from the CKM matrix. Using the unitary condition of the CKM matrix: $ V_{CKM}  V_{CKM}^\dagger = V_{CKM}^\dagger V_{CKM} = I $; we can extract constraints on the term:
+ 
+ \begin{comment}
+ \[
+\left(
+ \begin{array}{ccc}
+  V_{ud} & V_{us} & V_{ub} \\
+  V_{cd} & V_{cs} & V_{cb} \\
+  V_{td} & V_{ts} & V_{tb}
+ \end{array}
+ \right)
+ \left(
+ \begin{array}{ccc}
+  V_{ud} & V_{us} & V_{ub} \\
+  V_{cd} & V_{cs} & V_{cb} \\
+  V_{td} & V_{ts} & V_{tb}
+ \end{array}
+ \right)^\dagger
+ =
+  \left(
+ \begin{array}{ccc}
+  1 & 0 & 0 \\
+  0 & 1 & 0 \\
+  0 & 0 & 1
+ \end{array}
+ \right)
+\]
+\end{comment}
+\par
+\[ V_{CKM}  V_{CKM}^\dagger = I \]
+ \[
+\left(
+ \begin{array}{ccc}
+  V_{ud} & V_{us} & V_{ub} \\
+  V_{cd} & V_{cs} & V_{cb} \\
+  V_{td} & V_{ts} & V_{tb}
+ \end{array}
+ \right)
+ \left(
+ \begin{array}{ccc}
+  V_{ud}^* & V_{cd}^* & V_{td}^* \\
+  V_{us}^* & V_{cs}^* & V_{ts}^* \\
+  V_{ub}^* & V_{cb}^* & V_{tb}^*
+ \end{array}
+ \right)
+ =
+  \left(
+ \begin{array}{ccc}
+  1 & 0 & 0 \\
+  0 & 1 & 0 \\
+  0 & 0 & 1
+ \end{array}
+ \right)
+\]
+Expanding the above we get:
+\[
+ \left(
+ \begin{array}{ccc}
+V_{ud}.V_{ud}^* +  V_{us}. V_{us}^* + V_{ub}.V_{ub}^*  &  V_{ud}.V_{cd}^* +  V_{us}. V_{cs}^* + V_{ub}.V_{cb}^* & V_{ud}.V_{td}^* +  V_{us}. V_{ts}^* + V_{ub}.V_{tb}^* \\
+
+V_{cd}.V_{ud}^* +  V_{cs}. V_{us}^* + V_{cb}.V_{ub}^* & V_{cd}.V_{cd}^* +  V_{cs}. V_{cs}^* + V_{cb}.V_{cb}^* & V_{cd}.V_{td}^* +  V_{cs}. V_{ts}^* + V_{cb}.V_{tb}^* \\
+
+V_{td}.V_{ud}^* +  V_{ts}. V_{us}^* + V_{tb}.V_{ub}^* & V_{td}.V_{cd}^* +  V_{ts}. V_{cs}^* + V_{tb}.V_{cb}^* & V_{td}.V_{td}^* +  V_{ts}. V_{ts}^* + V_{tb}.V_{tb}^*
+
+ \end{array}
+ \right)
+\]
+
+\[ 
+ =
+ \left(
+ \begin{array}{ccc}
+  1 & 0 & 0 \\
+  0 & 1 & 0 \\
+  0 & 0 & 1
+ \end{array}
+ \right)
+ \]
+\[ V_{CKM}^\dagger V_{CKM} = I \]
+
+ \[
+ \left(
+ \begin{array}{ccc}
+  V_{ud}^* & V_{cd}^* & V_{td}^* \\
+  V_{us}^* & V_{cs}^* & V_{ts}^* \\
+  V_{ub}^* & V_{cb}^* & V_{tb}^*
+ \end{array}
+ \right)
+ \left(
+ \begin{array}{ccc}
+  V_{ud} & V_{us} & V_{ub} \\
+  V_{cd} & V_{cs} & V_{cb} \\
+  V_{td} & V_{ts} & V_{tb}
+ \end{array}
+ \right)
+ = 
+  \left(
+ \begin{array}{ccc}
+  1 & 0 & 0 \\
+  0 & 1 & 0 \\
+  0 & 0 & 1
+ \end{array}
+ \right)
+\]
+Expanding the above we get:
+
+\[
+ \left(
+ \begin{array}{ccc}
+  V_{ud}V_{ud}^* +  V_{cd}V_{cd}^* + V_{td}V_{td}^* & V_{us}V_{ud}^* +  V_{cs}V_{cd}^* + V_{ts}V_{td}^* & V_{ub}V_{ud}^* +  V_{cb}V_{cd}^* + V_{tb}V_{td}^* \\
+  
+  V_{ud}V_{us}^* +  V_{cd}V_{cs}^* + V_{ts}V_{td}^* & V_{us}V_{us}^* +  V_{cs}V_{cs}^* + V_{ts}V_{ts}^* & V_{ub}V_{us}^* +  V_{cb}V_{cs}^* + V_{tb}V_{ts}^* \\
+  
+  V_{ud}V_{ub}^* +  V_{cd}V_{cd}^* + V_{td}V_{tb}^* & V_{us}V_{ub}^* +  V_{cs}V_{cb}^* + V_{ts}V_{tb}^* & V_{ub}V_{ub}^* +  V_{cb}V_{cb}^* + V_{tb}V_{tb}^*
+  
+ \end{array}
+ \right)
+\]
+
+
+\subsection{Unitary Triangles}
+The off-diagonal terms equate to zero. where it follows that:
+%
+\[ V_{ud}V_{us}^* + V_{cd}V_{cs}^*+V_{td}V_{ts}^*=0\] : equation 1 %need to number my equations properly, "equation 1" will change
+\[ V_{ud}V_{ub}^* + V_{cd}V_{cb}^*+V_{td}V_{tb}^*=0\]
+\[ V_{us}V_{ub}^* + V_{cs}V_{cb}^*+V_{ts}V_{tb}^*=0\]
+
+
+The six independent variables corresponding to the off-diagonal zeros in the unit matrix can be represented as triangles in the complex plane; where each triangle has the same area. A triangle with angles other than 0 or $\pi$ demonstrates CP violation which is proportional to the triangles area. 
+
+We can construct a triangle by dividing through by  %want to add modulus sign 
+%[\frac{V_{ud}V_{ub}^*}{V_{cd}V_{cb}^*} + [\frac{V_{td}V_{tb}^*}{V_{cd}V_{cb}^*}\ + 1 = 0]
+$V_{cd} V_{cb}^*$, where the base of the triangle $= 1$ using equation 1. The lengths of the triangles are shown in figure 1.
+
+%\begin{figure}[!h]
+%\centering
+%\includegraphics[scale=1]{unitary triangle 1}]
+%\caption{The Unitary Triangle}
+%\label{fig}
+%\end{figure}
+%Unitary Triangle image taken from http://pprc.qmul.ac.uk/~bona/ulpg/cpv/lecture2.pdf
+
+The angles of the Unitary Triangle are defined as:
+$ \alpha = arg(-V_{td}V_{tb}^*/V_{ud}V_{ub}^*)$
+$ \beta = arg(-V_{cd}V_{cb}^*/V_{td}V_{tb}^*)$
+$ \gamma = arg(-V_{ud}V_{ub}^*/V_{cd}V_{cb}^*)$
+
+From this example of the Unitary Triangle we have obtained three angles; we need to measure the angles and sides to ensure that the angles does indeed form a triangle; where the total area should equate to $\pi$ as well as ensure that the triangles closes. We can verify these angles by looking at observations from various experiments. Since this triangle is constructed from the CKM matrix which involves $d$ and $b$ quarks and $b \rightarrow d$ transitions; we can see that this occurs in the mixing of $B^0$ and $\bar{B^0}$ mesons and so it is ideal to study this situation.
+
+\newpage
+
+The CKM matrix is unitary and so by definition: $ V_{CKM} V_{CKM}^\dagger = I $ where I is the identity matrix of $n \times n$ dimensions. Firstly it is necessary to define the number of possible parameters that we can obtain from the CKM matrix and experiments. The matrix V has $2N^2$ parameters as each element has both a real and imaginary component (which respectively corresponds to the amplitude and phase). By taking advantage of the fact that $V_CKM$ is unitary, we can reduce the number of parameters that can be identified from $2N^2 \rightarrow N^2$ 
+
+An N x N unitary matrix has $N^2$ real parameters 
+
+The CKM matrix can be parameterised by three mixing angles and a CP-violating phase in the complex plane. One example includes:
+
+
+\[ V=
+\left(
+ \begin{array}{ccc}
+  c_{12}c_{13} & s_{12}c_{13} & s_{13}e^{-i\delta} \\
+  -s_{12}-c_{12}s_{23}s_{13}e^{i\delta} & c_{12}c_{23}-s_{12}s_{23}s_{13}e^{i\delta} & s_{23}c_{13} \\
+  s_{12}s_{23}-c_{12}c_{23}s_{13}e^{i\delta} & -c_{12}s_{23}-s_{12}c_{23}s_{13}e^{i\delta} & c_{23}c_{13}
+ \end{array}
+ \right)
+\]
+With $s_{ij} = sin\theta_{ij}, c_{ij} = cos\theta_{ij}$, where $\theta_{ij}$ is the quark mixing angles and $\delta$ is the CP violating phase which is responsible for the flavor changing processes in the Standard Model. For convenience the angle $\delta_{ij}$ is chosen to lie within the first quadrant so that $s_{ij}$ and $c_{ij} \geq 0$. 
+
+Experimentally it has been observed that $\theta_{13} << \theta_{23} << \theta_{12} << 1 $ and so it is convenient to express the elements of the CKM matrix in terms of the Wolfenstein Parameterisation (Wolfenstein, 1983), which can be expressed as an expansion in $\lambda = sin\theta_c, A, \rho, \eta ~ O$.
+
+\[V_{CKM}=
+\left(
+ \begin{array}{ccc}
+  1-\lambda^2/2 & \lambda & A\lambda^3(\rho-i\eta) \\
+  -\lambda & 1-\lambda^2/2 & A\lambda^2 \\
+  A\lambda^3(1-\rho-i\eta) & -A\lambda^2 & 1
+ \end{array}
+ \right)
+\]
+
+With the Wolfenstein Parametrisation we can draw the relation as a triangle in the $\bar{\rho} - \bar{\eta}$ plane.
+
+
+
+\subsection{B mixing}
+
+\subsection{Indirect CP Violation}
+ 
+ 
+*CP violation in decays
+ 
+\subsection{Direct CP Violation}
+In 2001 a number of experiments including the BaBar Experiment at the Stanford Linear Accelerator Center in the US and the Belle Experiment at the High Energy Accelerator Research Organisation in Japan, observed direct CP violation, specifically in the decays of B meson. Direct CP violation 
+
+*CP violation in mixing 
+
+\subsection{CP Violation From Interference Between Mixing and Decay Processes}					
+
+
+\subsection{•}
+
+\section{CKM Determination}
+\subsubsection{Classification}
+We can determine the parameters of the unitary triangle in two different ways:
+\begin{itemize}
+\item Parameters
+\subitem Sides of the unitary triangle 
+\subitem Angles of the unitary triangle
+\subitem Combination of the above
+\item Amplitudes
+\subitem Tree
+\subitem Loop
+\subitem Combination of the above
+\end{itemize}
+
+\section{UTfit inputs}
+
+\subsection{Alpha}
+
+\subsection{•}
+
+
+
+
+
+\subsection{Conclusions}
+\label{conclusions}
+
+And of course the answer is $42$.
+
+\begin{thebibliography}{9}
+
+\bibitem{ben}
+{\it Limit on $B_s\to \mu\mu$ branching ratio based on 4.9 fb$^{-1}$ of integrated luminosity}, 
+the ATLAS collaboration, ATLAS-CONF-2013-076
+\end{thebibliography}
+
+\end{document}
