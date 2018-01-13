@@ -1,13 +1,15 @@
 from editorUI import *
 from pathlib import Path
 import glob
+import time
 
 class PreviewWindow(QWidget):
 
     def __init__(self, EditorWindow_class, screenDimX, screenDimY):
+        time.sleep(1.25)
         self.init_pathVariables(EditorWindow_class)
         super(PreviewWindow, self).__init__()
-        
+
         self.scene = QGraphicsScene()
         self.view = View(self.scene)
         self.scene.setBackgroundBrush(QColor('darkGray'))
@@ -15,12 +17,14 @@ class PreviewWindow(QWidget):
         pageBreakValue = 25
         
         for file in (sorted(os.listdir(self.folderDir))):
+            print(file)
+            #Probably should sleep first and wait for files to finish processing and THEN run this shit
             pixmap = QPixmap(os.path.join(self.folderDir, file))
             imageObj = self.scene.addPixmap(pixmap)
             imageObj.setOffset(0, self.imagePos)
             self.imagePos = self.imagePos + pixmap.height() + pageBreakValue
 
-        self.view.fitInView(0, 0, screenDimY, screenDimX, Qt.KeepAspectRatio)
+        self.view.fitInView(25, 0, screenDimY, screenDimX, Qt.KeepAspectRatio)
         self.view.setAlignment(Qt.AlignCenter)
         self.view.resize(screenDimX, screenDimY)
         WindowUtilityFunctions.setTopRight(self.view)
@@ -82,7 +86,7 @@ class preview_thread(QThread):
             #Folder already exists
             pass
         for pageCount in range(0, len(doc)):
-            zoom = 300.0 / 72.0
+            zoom = 250.0 / 72.0
             matr = fitz.Matrix(zoom, zoom)
             px = doc.getPagePixmap(pageCount, matrix = matr, clip = None, alpha = False)
             px_name = "%s-%s.png" % (os.path.basename(os.path.normpath(self.p)), str(pageCount))
@@ -109,7 +113,7 @@ class preview_thread(QThread):
         stdout = subprocess.PIPE,
         stderr = subprocess.PIPE)
         try:
-            stdoutdata, stderrdata = proc.communicate(timeout=10)
+            stdoutdata, stderrdata = proc.communicate(timeout=1000)
             #try looking at return code.
             if proc.returncode == 1: 
             #Subprocess (pdflatex) error -- pdflatex crashes (fatal error) and notifies user of error.
