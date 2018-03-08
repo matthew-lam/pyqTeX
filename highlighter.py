@@ -55,17 +55,19 @@ class SyntaxHighlighter(QSyntaxHighlighter):
         keywordFormat = QTextCharFormat()
         keywordFormat.setForeground(Qt.darkBlue)
         keywordFormat.setFontWeight(QFont.Bold)
-
         keywordPatterns = ["begin\{document\}", "end\{document\}", "\\\\begin", "\\\\end"]
-
-        self.highlightRules += [(QRegExp(item), keywordFormat)
-                for item in keywordPatterns]
+        self.highlightRules += [(QRegExp(item), keywordFormat) for item in keywordPatterns]
 
         self.commentFormat = QTextCharFormat()
         self.commentFormat.setForeground(Qt.darkGray)
 
         self.commentStartChar = QRegExp("\\%")
         self.commentEndChar = QRegExp("$")
+
+        mathRules = QTextCharFormat()
+        mathRules.setForeground(Qt.darkCyan)
+        mathRulesDict = ["\$.*\$", "\\\\begin\{displaymath\}", "\\\\end\{displaymath\}", "\\\\begin\{equation\}", "\\\\end\{equation\}"]
+        self.highlightRules += [(QRegExp(item), mathRules) for item in mathRulesDict]
 
 #This block of code is based on the PyQt5 example for QSyntaxHighlighter. (baoboa github)
     def highlightBlock(self, text):

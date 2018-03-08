@@ -4,7 +4,8 @@ import glob
 import time
 
 class PreviewWindow(QWidget):
-
+    #This class iterates through all the files that exist in the directory where PDF files
+    #are located and then shows them in a newly spawned window.
     def __init__(self, EditorWindow_class, screenDimX, screenDimY):
         time.sleep(1.25)
         self.init_pathVariables(EditorWindow_class)
@@ -51,6 +52,8 @@ class View(QGraphicsView):
             self.scale(0.9, 0.9) 
 
 class preview_thread(QThread):
+    #This class processes .tex -> PDF -> PNG file conversions in a worker thread, seperate from GUI thread
+    #then outputs all compiled files into seperate folders.
 
     thread_message = pyqtSignal(str)
     returnCode = pyqtSignal(int)
@@ -106,7 +109,7 @@ class preview_thread(QThread):
         return        
 
     def run(self):
-        #Statements to be processed in thread placed in this method. Use .start() to run thread.         
+        #Statements to be processed in thread is placed in this method. Use .start() to run thread.         
         #Creates a new subprocess to compile current document
         proc = subprocess.Popen(['pdflatex', '%s' % self.copiedFile_name],
         stdin = subprocess.PIPE,
@@ -119,7 +122,7 @@ class preview_thread(QThread):
             #Subprocess (pdflatex) error -- pdflatex crashes (fatal error) and notifies user of error.
                 self.thread_message.emit("An error has occured --- error message from log file:\n------\
                     \n\n" + stdoutdata.decode('ascii') + 
-                    "\n------\nPlease ignore console debugging options.")
+                    "\n------\nWhere 'l.xxx represents error occuring at line number xxx.\n------\nPlease ignore console debugging options.")
                 print(stdoutdata.decode('ascii'))
                 self.returnCode.emit(1)
             elif proc.returncode == 0: 
@@ -135,23 +138,20 @@ class preview_thread(QThread):
         auxFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.aux')
         logFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.log')
         try:
+            #Checking if directory already exists befoer moving files
             if os.path.exists(os.path.join(self.baseFolder)) == False:
                 os.makedirs((os.path.join(self.baseFolder)))
                 shutil.move(pdfFile, (os.path.join(self.baseFolder)))
                 shutil.move(auxFile, (os.path.join(self.baseFolder)))
                 shutil.move(logFile, (os.path.join(self.baseFolder)))
-            else:
-                pngFileFolder = self.baseFolder + '-compiled'
-                os.chdir(pngFileFolder)
-                files2delete = glob.glob('*.png')
-                for pngfiles in files2delete:
-                    os.unlink(pngfiles)
-                shutil.copy2(pdfFile, (os.path.join(self.baseFolder)))
-                shutil.copy2(auxFile, (os.path.join(self.baseFolder)))
-                shutil.copy2(logFile, (os.path.join(self.baseFolder)))
-                os.remove(pdfFile)
-                os.remove(auxFile)
-                os.remove(logFile)
+            elif os.path.exists(os.path.join(self.baseFolder)):
+                print((os.path.join(self.baseFolder)))
+                shutil.rmtree((os.path.join(self.baseFolder)))
+                shutil.rmtree(self.baseFolder + '-compiled')
+                os.makedirs((os.path.join(self.baseFolder)))
+                shutil.move(pdfFile, (os.path.join(self.baseFolder)))
+                shutil.move(auxFile, (os.path.join(self.baseFolder)))
+                shutil.move(logFile, (os.path.join(self.baseFolder)))
         except:
             pass
 
