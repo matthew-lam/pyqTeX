@@ -74,6 +74,7 @@ class SyntaxHighlighter(QSyntaxHighlighter):
         #Highlight a block of text using the formatting settings defined by the programmer and the syntax rules set above.
         for item, format in self.highlightRules:
             expression = QRegExp(item)
+            expression.setMinimal(True)
             index = expression.indexIn(text)
             while index >= 0:
                 length = expression.matchedLength()
