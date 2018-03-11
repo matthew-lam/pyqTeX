@@ -39,7 +39,7 @@ class SyntaxHighlighter(QSyntaxHighlighter):
 
         textFormatting = QTextCharFormat()
         textFormatting.setForeground(Qt.darkRed)
-        textFormattingDict = ["\\\\par", "\\\\vspace", "\\\\hspace", "\\\\label", "\\\\ref", "\\\\pageref"]
+        textFormattingDict = ["\\\\par", "\\\\vspace", "\\\\hspace", "\\\\label", "\\\\ref", "\\\\pageref", '\\\\newpage', '\\\\pagebreak', '\\\nopagebreak', '\\\newenvironment']
         self.highlightRules += [(QRegExp(item), textFormatting) for item in textFormattingDict]
 
         texSections = QTextCharFormat()
