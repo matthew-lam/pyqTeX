@@ -3,7 +3,7 @@ from pathlib import Path
 import glob
 import time
 
-class PreviewWindow(QWidget):
+class PreviewWindow(QMainWindow):
     #This class iterates through all the files that exist in the directory where PDF files
     #are located and then shows them in a newly spawned window.
     def __init__(self, EditorWindow_class, screenDimX, screenDimY):
@@ -27,10 +27,13 @@ class PreviewWindow(QWidget):
 
         self.view.fitInView(25, 0, screenDimY, screenDimX, Qt.KeepAspectRatio)
         self.view.setAlignment(Qt.AlignCenter)
-        self.view.resize(screenDimX, screenDimY)
-        WindowUtilityFunctions.setTopRight(self.view)
-        self.view.setWindowTitle('LaTeX editor -- Preview Window')
-        self.view.show()
+        self.setWindowTitle('LaTeX editor -- Preview Window')
+        self.setCentralWidget(self.view)
+        self.resize(screenDimX, screenDimY)
+        WindowUtilityFunctions.setTopRight(self)
+        self.toolbar = self.addToolBar('Toolbar')
+        self.PW_toolBar_init()
+        self.show()
 
     def init_pathVariables(self, EditorWindow_class):
         self.file = EditorWindow_class.currentFile
@@ -39,6 +42,34 @@ class PreviewWindow(QWidget):
         self.baseFolder = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '-pdf') 
         self.folderDir = self.baseFolder + '-compiled'
 
+    def PW_toolBar_init(self):
+        self.toolbar.setMovable(False)
+        self.toolbar.setMinimumSize(0,45)
+
+        self.printFile = QAction(QIcon('Assets/Icons/print_Icon.png'), '&Print file', self)
+        self.printFile.triggered.connect(self.printHandler)
+        self.toolbar.addAction(self.printFile)
+
+        self.zoomInFile = QAction(QIcon('Assets/Icons/zoomIn_Icon.png'), '&Zoom in', self)
+        self.zoomInFile.triggered.connect(self.view.scaleUp)
+        self.toolbar.addAction(self.zoomInFile)
+
+        self.zoomOutFile = QAction(QIcon('Assets/Icons/zoomOut_Icon.png'), '&Zoom out', self)
+        self.zoomOutFile.triggered.connect(self.view.scaleDown)
+        self.toolbar.addAction(self.zoomOutFile)
+        
+        self.show()
+
+    def printHandler(self):
+        printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
+        printDialog = QtPrintSupport.QPrintDialog(printer, self)
+        if printDialog.exec_() == QtPrintSupport.QPrintDialog.Accepted:
+            painter = QPainter(printer)
+            painter.setRenderHint(QPainter.Antialiasing)
+            self.view.render(painter)
+            painter.end()
+        else:
+            pass
 
 class View(QGraphicsView):
 
@@ -47,9 +78,15 @@ class View(QGraphicsView):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Equal:
-            self.scale(1.1, 1.1)
+            self.scaleUp()
         elif event.key() == Qt.Key_Minus:
-            self.scale(0.9, 0.9) 
+            self.scaleDown()
+
+    def scaleDown(self):
+        self.scale(0.9, 0.9)
+
+    def scaleUp(self):
+        self.scale(1.1, 1.1)
 
 class preview_thread(QThread):
     #This class processes .tex -> PDF -> PNG file conversions in a worker thread, seperate from GUI thread
@@ -89,8 +126,8 @@ class preview_thread(QThread):
             #Folder already exists
             pass
         for pageCount in range(0, len(doc)):
-            zoom = 250.0 / 72.0
-            matr = fitz.Matrix(zoom, zoom)
+            initialZoom = 175.0 / 75.0
+            matr = fitz.Matrix(initialZoom, initialZoom)
             px = doc.getPagePixmap(pageCount, matrix = matr, clip = None, alpha = False)
             px_name = "%s-%s.png" % (os.path.basename(os.path.normpath(self.p)), str(pageCount))
             fileDir = str(self.p.parent.parent) + '/' + px_name
