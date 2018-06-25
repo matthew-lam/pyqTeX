@@ -17,9 +17,7 @@ class SyntaxHighlighter(QSyntaxHighlighter):
         #Dark Yellow = sections
         #Dark red = text formatting
         #Gray = comments
-        #Need to add : maths stuff(?)
-        #To add math stuff within brackets, make sure '$' is allowed in enclosed braces rule and math rule is appended last
-
+        
         self.highlightRules = []
 
         texNewLine = QTextCharFormat()

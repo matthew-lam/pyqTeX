@@ -17,22 +17,29 @@ class PreviewWindow(QMainWindow):
         self.imagePos = 0
         pageBreakValue = 25
         
-        for file in (sorted(os.listdir(self.folderDir))):
-            print(file)
-            #Probably should sleep first and wait for files to finish processing and THEN run this shit
-            pixmap = QPixmap(os.path.join(self.folderDir, file))
-            imageObj = self.scene.addPixmap(pixmap)
-            imageObj.setOffset(0, self.imagePos)
-            self.imagePos = self.imagePos + pixmap.height() + pageBreakValue
+        try:
+            for file in (sorted(os.listdir(self.folderDir))):
+                print(file)
+                #Probably should sleep first and wait for files to finish processing and THEN run this shit
+                pixmap = QPixmap(os.path.join(self.folderDir, file))
+                imageObj = self.scene.addPixmap(pixmap)
+                imageObj.setOffset(0, self.imagePos)
+                self.imagePos = self.imagePos + pixmap.height() + pageBreakValue
+        except:
+            pass
 
         self.view.fitInView(25, 0, screenDimY, screenDimX, Qt.KeepAspectRatio)
         self.view.setAlignment(Qt.AlignCenter)
         self.setWindowTitle('LaTeX editor -- Preview Window')
         self.setCentralWidget(self.view)
         self.resize(screenDimX, screenDimY)
-        WindowUtilityFunctions.setTopRight(self)
+        windowUtility.WindowUtilityFunctions.setTopRight(self)
         self.toolbar = self.addToolBar('Toolbar')
         self.PW_toolBar_init()
+        self.view.scaleDown()
+        self.view.scaleDown()
+        self.view.scaleDown()
+        self.view.scaleDown()
         self.show()
 
     def init_pathVariables(self, EditorWindow_class):
@@ -126,7 +133,7 @@ class preview_thread(QThread):
             #Folder already exists
             pass
         for pageCount in range(0, len(doc)):
-            initialZoom = 175.0 / 75.0
+            initialZoom = 175.0 / 50.0
             matr = fitz.Matrix(initialZoom, initialZoom)
             px = doc.getPagePixmap(pageCount, matrix = matr, clip = None, alpha = False)
             px_name = "%s-%s.png" % (os.path.basename(os.path.normpath(self.p)), str(pageCount))
@@ -171,10 +178,11 @@ class preview_thread(QThread):
             stdoutdata, stderrdata = proc.communicate()
             self.thread_message.emit(stdoutdata.decode('ascii'))
 
-        pdfFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.pdf')
-        auxFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.aux')
-        logFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.log')
         try:
+            pdfFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.pdf')
+            auxFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.aux')
+            logFile = str(self.p.parent.parent) + '/' + os.path.basename(os.path.normpath(self.p) + '.log')
+
             #Checking if directory already exists befoer moving files
             if os.path.exists(os.path.join(self.baseFolder)) == False:
                 os.makedirs((os.path.join(self.baseFolder)))
